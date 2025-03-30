@@ -27,7 +27,6 @@ def load_model(model_path):
         logger.error(f"Error loading model: {e}")
         raise
 
-
 def preprocess_frame(frame):
     resized = cv2.resize(frame, (224, 224)) 
     normalized = resized / 255.0
