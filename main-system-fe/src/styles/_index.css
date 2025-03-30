@@ -121,3 +121,59 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom scrollbar for the logs sidebar */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  @apply bg-gray-900;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  @apply bg-gray-700 rounded-full;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-600;
+}
+
+/* Animation for sidebar */
+.sidebar-transition {
+  transition: width var(--sidebar-transition-duration) ease-in-out;
+}
+
+/* Grid layouts for different numbers of feeds */
+.feed-grid-1 {
+  @apply grid-cols-1;
+}
+
+.feed-grid-2 {
+  @apply grid-cols-1 md:grid-cols-2;
+}
+
+.feed-grid-3,
+.feed-grid-4 {
+  @apply grid-cols-1 md:grid-cols-2;
+}
+
+@screen lg {
+  .feed-grid-3 {
+    @apply grid-cols-3;
+  }
+
+  .feed-grid-4 {
+    @apply grid-cols-2;
+  }
+}
+
+.feed-grid-5,
+.feed-grid-6 {
+  @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+}
+
+.feed-grid-7,
+.feed-grid-8 {
+  @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-4;
+}
