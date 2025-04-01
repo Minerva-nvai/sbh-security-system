@@ -1,38 +1,7 @@
-// import data from "@/_config/feed.json";
-
-// const CameraFeed = () => {
-//   return (
-//     <aside className="flex flex-col flex-3/4 justify-center items-start bg-accent px-1 w-full h-screen overflow-y-auto camera_feed">
-//       <div className="place-items-center gap-2 gap-x-2 grid grid-cols-2 px-3 py-4 w-full camera_feed__content">
-//         {data.zones[0].feeds.map((f) => {
-//           return (
-//             <video
-//               id={`feed-${f.name}`}
-//               className="video-js"
-//               autoPlay
-//               controls
-//               preload="auto"
-//               width="640"
-//               height="360"
-//               data-setup="{}"
-//             >
-//               <source src={f.url} type="application/x-mpegURL" />
-//               Your browser does not support the video tag.
-//             </video>
-//           );
-//         })}
-//       </div>
-//     </aside>
-//   );
-// };
-
-// export default CameraFeed;
-
-// ---------------------------------------------------------------------------------------
 "use client";
 
-import { useRef } from "react";
-import { Play, Maximize, AlertCircle } from "lucide-react";
+import { useRef, useEffect } from "react";
+import { AlertCircle } from "lucide-react";
 import type { Feed } from "./_index";
 
 interface CameraFeedsProps {
@@ -54,19 +23,7 @@ export function CameraFeeds({ feeds }: CameraFeedsProps) {
   }
 
   // Determine grid layout based on number of feeds
-  let gridClass = "grid-cols-1";
-
-  if (feeds.length === 2) {
-    gridClass = "grid-cols-1 md:grid-cols-2";
-  } else if (feeds.length === 3) {
-    gridClass = "grid-cols-1 md:grid-cols-3";
-  } else if (feeds.length === 4) {
-    gridClass = "grid-cols-1 md:grid-cols-2";
-  } else if (feeds.length <= 6) {
-    gridClass = "grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
-  } else {
-    gridClass = "grid-cols-1 md:grid-cols-2 lg:grid-cols-4";
-  }
+  const gridClass = `feed-grid-${Math.min(feeds.length, 8)}`;
 
   return (
     <div className={`grid ${gridClass} gap-4`}>
@@ -84,43 +41,54 @@ interface CameraFeedProps {
 function CameraFeed({ feed }: CameraFeedProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // In a real application, you would use a library like hls.js or video.js
-  // to handle RTSP streams. For this demo, we'll just show a placeholder.
+  useEffect(() => {
+    // Use VideoJS if available globally
+    // @ts-ignore
+    if (window.videojs && videoRef.current) {
+      // @ts-ignore
+      const player = window.videojs(videoRef.current, {
+        autoplay: true,
+        controls: true,
+        preload: "auto",
+        fluid: true,
+        sources: [
+          {
+            src: feed.url,
+            type: "application/x-mpegURL",
+          },
+        ],
+      });
+
+      return () => {
+        if (player) {
+          player.dispose();
+        }
+      };
+    }
+  }, [feed.url]);
 
   return (
     <div className="relative bg-gray-900 rounded-lg aspect-video overflow-hidden">
       <div className="absolute inset-0 flex justify-center items-center">
         <video
+          id={`feed-${feed.name}`}
+          className="w-full h-full video-js vjs-default-skin vjs-big-play-centered"
+          controls
           ref={videoRef}
-          className="w-full h-full object-cover"
           poster="/placeholder.svg?height=360&width=640"
-          muted
-        />
+          data-setup='{"fluid": true}'
+        >
+          <source src={feed.url} type="application/x-mpegURL" />
+          <p className="vjs-no-js">
+            To view this video please enable JavaScript, and consider upgrading
+            to a web browser that supports HTML5 video
+          </p>
+        </video>
 
-        <div className="absolute inset-0 flex flex-col">
+        <div className="absolute inset-0 flex flex-col pointer-events-none">
           {/* Feed title */}
-          <div className="bg-black bg-opacity-50 p-2">
-            <p className="font-medium text-sm">{feed.description}</p>
-          </div>
-
-          <div className="flex flex-1 justify-center items-center">
-            <button
-              className="bg-black bg-opacity-50 hover:bg-opacity-70 p-3 rounded-full transition-all"
-              aria-label="Play video"
-            >
-              <Play size={24} />
-            </button>
-          </div>
-
-          {/* Controls */}
-          <div className="flex justify-end bg-black bg-opacity-50 p-2">
-            <button
-              className="hover:bg-gray-700 p-1 rounded"
-              aria-label="Fullscreen"
-            >
-              <Maximize size={16} />
-            </button>
-          </div>
+          <div className="bg-black bg-opacity-50 p-2 pointer-events-auto"></div>
+          <p className="font-medium text-sm">{feed.description}</p>
         </div>
       </div>
     </div>

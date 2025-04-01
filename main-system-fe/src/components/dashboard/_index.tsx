@@ -58,6 +58,7 @@ export function Dashboard() {
         }
       } catch (_err) {
         // Fallback to hardcoded data for demo
+        console.log(_err);
         const hardcodedData = {
           org_name: "XYZ College",
           zones: [
@@ -70,22 +71,22 @@ export function Dashboard() {
                 {
                   name: "east-wing-gate-1a",
                   description: "East Wing Gate 1A",
-                  url: "rtsp://127.0.0.1:8554/stream",
+                  url: "http://localhost:8080/hls/stream.m3u8",
                 },
                 {
                   name: "east-wing-gate-1b",
                   description: "East Wing Gate 1B",
-                  url: "rtsp://127.0.0.1:8554/stream",
+                  url: "http://localhost:8080/hls/stream.m3u8", // Changed to HLS stream
                 },
                 {
                   name: "east-wing-ground-1a",
                   description: "East Wing Ground 1A",
-                  url: "rtsp://127.0.0.1:8554/stream",
+                  url: "http://localhost:8080/hls/stream.m3u8", // Changed to HLS stream
                 },
                 {
                   name: "east-wing-hallway-1a",
                   description: "East Wing Hallway 1A",
-                  url: "rtsp://127.0.0.1:8554/stream",
+                  url: "http://localhost:8080/hls/stream.m3u8", // Changed to HLS stream
                 },
               ],
             },
@@ -98,12 +99,12 @@ export function Dashboard() {
                 {
                   name: "west-wing-ground-1a",
                   description: "West Wing Ground 1A",
-                  url: "rtsp://127.0.0.1:8554/stream",
+                  url: "http://localhost:8080/hls/stream.m3u8", // Changed to HLS stream
                 },
                 {
                   name: "west-wing-ground-1b",
                   description: "West Wing Ground 1B",
-                  url: "rtsp://127.0.0.1:8554/stream",
+                  url: "http://localhost:8080/hls/stream.m3u8", // Changed to HLS stream
                 },
               ],
             },
